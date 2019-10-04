@@ -1,0 +1,33 @@
+#include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <istream>
+#include <vector>
+
+int main(int argc, char ** argv) {
+  std::string line;
+  std::vector<std::string> lines;
+  if (argc < 2) {
+    while (getline(std::cin, line)) {
+      lines.push_back(line);
+    }
+    std::sort(lines.begin(), lines.end());
+    for (std::vector<std::string>::iterator it = lines.begin(); it != lines.end(); ++it)
+      std::cout << ' ' << *it;
+    std::cout << '\n';
+  }
+  else {
+    for (int i = 1; i < argc; i++) {
+      std::ifstream flines(argv[i]);
+      while (getline(flines, line)) {
+        lines.push_back(line);
+      }
+      std::sort(lines.begin(), lines.end());
+      for (std::vector<std::string>::iterator it = lines.begin(); it != lines.end(); ++it)
+        std::cout << ' ' << *it;
+      std::cout << '\n';
+    }
+  }
+
+  return 0;
+}
