@@ -1,0 +1,59 @@
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+void iniArray(FILE * f, char * array) {
+  int c;
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 10; j++) {
+      c = fgetc(f);
+      if (c == '\n')
+        c = fgetc(f);
+      array[i * 10 + j] = c;
+    }
+  }
+  return;
+}
+void ptfArray(char * array) {
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 10; j++) {
+      printf("%c", array[i * 10 + j]);
+    }
+    printf("\n");
+  }
+  return;
+}
+void rotateMatrix(char * array) {
+  char b[10][10];
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 10; j++) {
+      b[i][j] = array[i * 10 + j];
+    }
+  }
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 10; j++) {
+      array[i * 10 + j] = b[10 - j][i];
+    }
+  }
+  return;
+}
+
+int main(int argc, char ** argv) {
+  if (argc != 2) {
+    fprintf(stderr, "Wrong number of arguments.\n");
+    return EXIT_FAILURE;
+  }
+  FILE * f = fopen(argv[1], "r+");
+  if (f == NULL) {
+    fprintf(stderr, "Can not open file!\n");
+    return EXIT_FAILURE;
+  }
+  char array[10][10];
+  char * p = array;
+
+  iniArray(f, p);
+  ptfArray(p);
+  rotateMatrix(p);  //rotate here
+  ptfArray(p);
+  return EXIT_SUCCESS;
+}
