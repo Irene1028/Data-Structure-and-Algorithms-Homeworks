@@ -1,0 +1,41 @@
+#include <cstdlib>
+#include <iostream>
+
+#include "bstset.h"
+#include "set.h"
+
+int main(void) {
+  BstSet<int> set;
+  BstSet<int> set2;
+  // using the answer of 091_traversals - 3
+  set.add(2);
+  set.add(4);
+  set.add(1);
+  set.add(7);
+  set.add(3);
+  set.add(9);
+  set.add(-1);
+  set.add(88);
+  set.add(17);
+  set.add(-23);
+  set.add(16);
+  set.add(44);
+  set.add(77);
+  std::cout << "value of 1 is:" << set.contains(1) << std::endl;
+  std::cout << "value of 9 is:" << set.contains(9) << std::endl;
+  set.remove(2);
+  set.remove(16);
+  set.remove(-1);
+
+  //std::cout << "mid_order: " << std::endl;
+  //map.inorder();
+  std::cout << "value of -23 is:" << set.contains(-23) << std::endl;
+  std::cout << "value of 9 is:" << set.contains(9) << std::endl;
+  std::cout << "value of 17 is:" << set.contains(17) << std::endl;
+  set2 = set;
+  std::cout << "value of -23 is:" << set2.contains(-23) << std::endl;
+  std::cout << "value of 9 is:" << set2.contains(9) << std::endl;
+  std::cout << "value of 16 is:" << set2.contains(16) << std::endl;
+
+  return EXIT_SUCCESS;
+}

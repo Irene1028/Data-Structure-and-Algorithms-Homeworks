@@ -1,0 +1,6 @@
+CFLAGS=-Wall -Werror -std=gnu++11 -pedantic -ggdb3
+
+dedup:dedup.cpp
+	g++ -o dedup dedup.o
+dedup.o: dedup.cpp
+	g++ $(CFLAGS) -c dedup.cpp

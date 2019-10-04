@@ -1,0 +1,92 @@
+#include <math.h>
+
+#include <cstdio>
+#include <iostream>
+
+#include "function.h"
+
+//This class is from next-Readme
+class SinFunction : public Function<int, int>
+{
+ public:
+  virtual int invoke(int arg) { return 10000000 * (sin(arg / 100000.0) - 0.5); }
+};
+
+//here we use y=x to implement linearfunction
+class LinearFunction : public Function<int, int>
+{
+ public:
+  virtual int invoke(int arg) { return arg; }
+};
+
+class LinearFunction2 : public Function<int, int>
+{
+ public:
+  virtual int invoke(int arg) { return 2 * arg + 1; }
+};
+//this class is from Readme
+class CountedIntFn : public Function<int, int>
+{
+ protected:
+  unsigned remaining;
+  Function<int, int> * f;
+  const char * mesg;
+
+ public:
+  CountedIntFn(unsigned n, Function<int, int> * fn, const char * m) :
+      remaining(n),
+      f(fn),
+      mesg(m) {}
+  virtual int invoke(int arg) {
+    if (remaining == 0) {
+      fprintf(stderr, "Too many function invocations in %s\n", mesg);
+      exit(EXIT_FAILURE);
+    }
+    remaining--;
+    return f->invoke(arg);
+  }
+};
+int binarySearchForZero(Function<int, int> * f, int low, int high);
+
+void check(Function<int, int> * f, int low, int high, int expected_ans, const char * mesg) {
+  int ivk_times = 0;
+  if (high > low) {
+    ivk_times = log(high - low) / log(2) + 1;
+  }
+  else {
+    ivk_times = 1;
+  }
+  std::cout << "times:" << ivk_times << std::endl;
+  CountedIntFn * Fn = new CountedIntFn(ivk_times, f, mesg);
+  int act_ans = binarySearchForZero(Fn, low, high);
+  if (act_ans != expected_ans) {
+    fprintf(stderr, "%s\n", mesg);
+    exit(EXIT_FAILURE);
+  }
+}
+
+int main() {
+  std::cout << "start testing..." << std::endl;
+  //  SinFunction * s = new SinFunction();
+  LinearFunction * l = new LinearFunction();
+  LinearFunction2 * l2 = new LinearFunction2();
+  //check(s, 0, 150000, 52359, "sinFunction:[0,150000],52359");
+  check(l, -1, 1, 0, "Linearfunction:[-1,1],0");
+  check(l, 0, 0, 0, "Linearfunction:[0,0],0");
+  //  check(l, -3, -3, -3, "Linearfunction:[-3,-3],-3");  //???
+  //check(l, 3, 3, 3, "Linearfunction:[1,1],1");
+
+  check(l, 3, 4, 3, "Linearfunction:[3,8],3");
+  check(l, -3, -2, -3, "Linearfunction:[-3,-2],-3");
+
+  check(l, -3000, 3, 0, "Linearfunction:[-3000,-3],0");
+  check(l, -3, 10000, 0, "Linearfunction:[-3,10000],0");
+  check(l, -3000, 10000, 0, "Linearfunction:[-3000,10000],0");
+
+  check(l, 3, 2, 3, "Linearfunction:[3,2],3");
+  check(l, 0, 8, 0, "Linearfunction:[0,8],0");
+  check(l, -8, 0, -1, "Linearfunction:[-8,0],-1");
+
+  check(l2, -3, 3, -1, "Linearfunction2");
+  return 0;
+}
